@@ -24,6 +24,9 @@
     <Filter Include="ソース ファイル\scene">
       <UniqueIdentifier>{85f63b20-7ac7-4c3d-9b80-359b46358035}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\hlsl">
+      <UniqueIdentifier>{25db1fc8-0070-4081-a54d-cd2cdd09820d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -79,5 +82,13 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="ClassDiagram.cd" />
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="shader2DTestVS.hlsl">
+      <Filter>ソース ファイル\hlsl</Filter>
+    </FxCompile>
+    <FxCompile Include="shader2DTestPS.hlsl">
+      <Filter>ソース ファイル\hlsl</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>
