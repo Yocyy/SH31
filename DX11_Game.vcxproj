@@ -137,6 +137,8 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="ClassDiagram.cd" />
+    <None Include="x64\Debug\shader2DTestPS.cso" />
+    <None Include="x64\Debug\shader2DTestVS.cso" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="shader2DTestPS.hlsl">

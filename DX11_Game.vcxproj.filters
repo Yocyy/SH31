@@ -27,6 +27,9 @@
     <Filter Include="ソース ファイル\hlsl">
       <UniqueIdentifier>{25db1fc8-0070-4081-a54d-cd2cdd09820d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\cso">
+      <UniqueIdentifier>{696b27c6-9ae8-4924-8ed1-8a65a566904a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -82,6 +85,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="ClassDiagram.cd" />
+    <None Include="x64\Debug\shader2DTestPS.cso">
+      <Filter>ソース ファイル\cso</Filter>
+    </None>
+    <None Include="x64\Debug\shader2DTestVS.cso">
+      <Filter>ソース ファイル\cso</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="shader2DTestVS.hlsl">

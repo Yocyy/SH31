@@ -17,5 +17,7 @@ using namespace DirectX;
 #define SCREEN_WIDTH	(960)			// ウインドウの幅
 #define SCREEN_HEIGHT	(540)			// ウインドウの高さ
 
+#define VS_FILEPATH "./x64/Debug/shader2DTestVS.cso"
+#define PS_FILEPATH "./x64/Debug/shader2DTestPS.cso"
 
 HWND GetWindow();
