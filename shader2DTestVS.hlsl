@@ -3,11 +3,23 @@ cbuffer ConstantBuffer : register(b0)
     matrix Projection;
 }
 
-void main(in  float4 inPosition  : POSITION0,
-          in  float4 inDiffuse   : COLOR0,
-          out float4 outPosition : SV_POSITION,
-          out float4 outDiffuse  : COLOR0)
+struct VS_IN
 {
-    outDiffuse = inDiffuse;
-    outPosition = mul(inPosition, Projection);
+    float4 inPosition : POSITION0;
+    float4 inDiffuse : COLOR0;
+    float2 inTexCoord : TEXCOORD0;
+};
+
+struct VS_OUT
+{
+    float4 outPosition : SV_POSITION;
+    float4 outDiffuse : COLOR0;
+    float2 outTexCoord : TEXCOORD0;
+};
+
+void main(in VS_IN input,out VS_OUT output) 
+{
+    output.outDiffuse = input.inDiffuse;
+    output.outPosition = mul(input.inPosition, Projection);
+    output.outTexCoord = input.inTexCoord;
 }

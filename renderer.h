@@ -9,10 +9,8 @@ struct VERTEX_3D
 {
     XMFLOAT3 Position;
 	XMFLOAT4 Diffuse;
-	//XMFLOAT2 TexCoord;
+	XMFLOAT2 TexCoord;
 };
-
-
 
 
 // êFç\ë¢ëÃ
@@ -69,6 +67,7 @@ struct LIGHT
 	COLOR		Diffuse;
 	COLOR		Ambient;
 };
+
 
 
 class CVertexBuffer;
