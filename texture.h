@@ -12,6 +12,7 @@ class CTexture
 public:
 
 	void Load( const char *FileName );
+	void Load(const char *FileName[]);
 	void Unload();
 
 	ID3D11ShaderResourceView* GetShaderResourceView(){ return m_ShaderResourceView; }

@@ -14,11 +14,19 @@ struct PS_IN
 void main(in PS_IN input, out float4 outDiffuse : SV_Target)
 {
     
-    float4 sepiaTone = float4(1.0f, 0.8f, 0.0f, 1.0f);
+   //マルチテクスチャ設定
     outDiffuse = g_Texture.Sample(g_SamplerState, input.inTexCoord);
-    //outDiffuse = input.inDiffuse;
-    //float tempPixel.rgb = (outDiffuse.r + outDiffuse.g + outDiffuse.b) * 0.3333f;
-    //outDiffuse = tempPixel ;
-    outDiffuse.rgb = (outDiffuse.r + outDiffuse.g + outDiffuse.b) * 0.3333f;
-    //outDiffuse += float4(0.0f, 0.0f, 0.0f, 0.0f);
+
+    //グレースケール(平均)
+    //outDiffuse.rgb = (outDiffuse.r + outDiffuse.g + outDiffuse.b) * 0.3333f;
+
+    //グレースケール(輝度)
+    //outDiffuse.rgb = outDiffuse.r * 0.299 + outDiffuse.g * 0.587 + outDiffuse.b * 0.114;
+
+    //セピア
+    outDiffuse.r *= 1.07;
+    outDiffuse.g *= 0.74;
+    outDiffuse.b *= 0.43;
+
+
 }
