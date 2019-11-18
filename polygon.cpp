@@ -44,8 +44,10 @@ void CPolygon::Init()
 	vertex[3].Diffuse = XMFLOAT4(1.0f, 1.0f, 0.0f, 1.0f);
 	vertex[3].TexCoord = XMFLOAT2(1.0f, 1.0f);
 
-	m_Texture = new CTexture();
-	m_Texture->Load("data/TEXTURE/HAL‚Ì‚ ‚¢‚Â.tga");
+	m_Texture[0] = new CTexture();
+	m_Texture[0]->Load("data/TEXTURE/cocoon.tga");
+	m_Texture[1] = new CTexture();
+	m_Texture[1]->Load("data/TEXTURE/smoke.tga");
 
 	D3D11_BUFFER_DESC bd;
 	ZeroMemory( &bd, sizeof(bd) );
@@ -72,9 +74,11 @@ void CPolygon::Uninit()
 	delete m_Shader;
 
 	m_VertexBuffer->Release();
-	m_Texture->Unload();
-	delete m_Texture;
 
+	m_Texture[0]->Unload();
+	m_Texture[1]->Unload();
+	delete m_Texture[0];
+	delete m_Texture[1];
 }
 
 
@@ -92,7 +96,8 @@ void CPolygon::Draw()
 	UINT stride = sizeof( VERTEX_3D );
 	UINT offset = 0;
 	CRenderer::GetDeviceContext()->IASetVertexBuffers( 0, 1, &m_VertexBuffer, &stride, &offset );
-	CRenderer::SetTexture(m_Texture);
+
+	CRenderer::SetTexture(m_Texture[0], m_Texture[1]);
 
 	XMFLOAT4X4 identity;
 	DirectX::XMStoreFloat4x4(&identity, XMMatrixIdentity());
