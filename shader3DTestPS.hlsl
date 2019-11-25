@@ -12,16 +12,19 @@ struct PS_IN
     float2 inTexCoord : TEXCOORD0;
 };
 
-void main(in PS_IN input, out float4 outDiffuse : SV_Target)
+float4 main(in PS_IN input) : SV_Target
 {
-    outDiffuse = g_Texture.Sample(g_SamplerState, input.inTexCoord);
-
+    float4 outDiffuse;
+    outDiffuse = g_Texture.Sample(g_SamplerState, input.inTexCoord);    //画像のリソースから画像を表示
+    
+    outDiffuse *= input.inDiffuse;
+    
    //マルチテクスチャ設定
     //outDiffuse = g_Texture[0].Sample(g_SamplerState, input.inTexCoord);
     //outDiffuse *= g_Texture[1].Sample(g_SamplerState, input.inTexCoord);
 
     //グレースケール(平均)
-    outDiffuse.rgb = (outDiffuse.r + outDiffuse.g + outDiffuse.b) * 0.3333f;
+    //outDiffuse.rgb = (outDiffuse.r + outDiffuse.g + outDiffuse.b) * 0.3333f;
 
     //グレースケール(輝度)
     //outDiffuse.rgb = outDiffuse.r * 0.299 + outDiffuse.g * 0.587 + outDiffuse.b * 0.114;
@@ -30,4 +33,6 @@ void main(in PS_IN input, out float4 outDiffuse : SV_Target)
     //outDiffuse.r *= 1.07;
     //outDiffuse.g *= 0.74;
     //outDiffuse.b *= 0.43;
+    
+    return outDiffuse;
 }
