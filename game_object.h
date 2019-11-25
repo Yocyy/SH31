@@ -8,7 +8,8 @@
 
 class CGameObject
 {
-
+private:
+	bool m_Destroy = false;
 protected:
 
 	XMFLOAT3					m_Position;
@@ -51,5 +52,21 @@ public:
 	}
 
 
-
+	virtual void SetDestroy()
+	{
+		m_Destroy = true;
+	}
+	virtual bool Destroy()
+	{
+		if (m_Destroy)
+		{
+			Uninit();
+			delete this;
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
 };

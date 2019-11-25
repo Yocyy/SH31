@@ -1,11 +1,15 @@
 #pragma once
 
 #include <list>
+#include <typeinfo>
 #include "main.h"
 
 #include "game_object.h"
 
 #include "polygon.h"
+#include "Field.h"
+#include "camera.h"
+
 
 class CScene
 {
@@ -20,6 +24,8 @@ public:
 	virtual void Init()
 	{
 		AddGameObject<CPolygon>();
+		AddGameObject<CField>();
+		AddGameObject<CCamera>();
 	}
 
 	virtual void Uninit()
@@ -58,6 +64,17 @@ public:
 		return gameObject;
 	}
 
+	template <typename T>
+	T* GetGameObject()
+	{
+		for (CGameObject* object : m_GameObject)
 
-
+		{
+			if (typeid(*object) == typeid(T))
+			{
+				return (T*)object;
+			}
+		}
+		return nullptr;
+	}
 };

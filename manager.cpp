@@ -53,3 +53,8 @@ void CManager::Draw()
 	CRenderer::End();
 
 }
+
+CScene* CManager::GetScene()
+{
+	return m_Scene;
+}

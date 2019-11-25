@@ -3,6 +3,8 @@
 
 struct CONSTANT
 {
+	XMFLOAT4X4 WorldMatrix;
+	XMFLOAT4X4 ViewMatrix;
 	XMFLOAT4X4 ProjectionMatrix;
 };
 
@@ -21,6 +23,8 @@ public:
 	void Uninit();
 	void Set();
 
+	void SetWorldMatrix(XMFLOAT4X4* WorldMatrix) { m_Constant.WorldMatrix = Transpose(WorldMatrix); };
+	void SetViewMatrix(XMFLOAT4X4* ViewMatrix) { m_Constant.ViewMatrix = Transpose(ViewMatrix); };
 	void SetProjectionMatrix(XMFLOAT4X4* ProjectionMatrix) { m_Constant.ProjectionMatrix = Transpose( ProjectionMatrix ); }
 
 	XMFLOAT4X4 Transpose(XMFLOAT4X4* Matrix)
