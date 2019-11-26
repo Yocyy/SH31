@@ -78,6 +78,22 @@ void CShader::Init( const char* VertexShader, const char* PixelShader )
 		hBufferDesc.ByteWidth = sizeof(CONSTANT);
 		CRenderer::GetDevice()->CreateBuffer(&hBufferDesc, NULL, &m_ConstantBuffer);
 	}
+
+	// 定数バッファ生成
+	{
+		D3D11_BUFFER_DESC hBufferDesc;
+		hBufferDesc.Usage = D3D11_USAGE_DEFAULT;
+		hBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+		hBufferDesc.CPUAccessFlags = 0;
+		hBufferDesc.MiscFlags = 0;
+		hBufferDesc.StructureByteStride = sizeof(float);
+
+		hBufferDesc.ByteWidth = sizeof(LIGHT);
+		CRenderer::GetDevice()->CreateBuffer(&hBufferDesc, NULL, &m_LightBuffer);
+	}
+		m_Light.Direction = XMFLOAT4(0.0f, -0.0f, 0.0f, 0.0f);	//ライトベクトル
+		m_Light.Diffuse = COLOR(0.0f, 0.0f, 0.0f, 0.0f);	//ライトカラー
+		m_Light.Ambient = COLOR(0.0f, 0.0f, 0.0f, 0.0f);	//環境光
 }
 
 
@@ -109,11 +125,13 @@ void CShader::Set()
 
 	// 定数バッファ更新
 	CRenderer::GetDeviceContext()->UpdateSubresource(m_ConstantBuffer, 0, NULL, &m_Constant, 0, 0);
-
+	CRenderer::GetDeviceContext()->UpdateSubresource(m_LightBuffer, 0, NULL, &m_Light, 0, 0);
 
 	// 定数バッファ設定
 	CRenderer::GetDeviceContext()->VSSetConstantBuffers(0, 1, &m_ConstantBuffer);
+	CRenderer::GetDeviceContext()->VSSetConstantBuffers(1, 1, &m_LightBuffer);
 
 	CRenderer::GetDeviceContext()->PSSetConstantBuffers(0, 1, &m_ConstantBuffer);
+	CRenderer::GetDeviceContext()->PSSetConstantBuffers(1, 1, &m_LightBuffer);
 }
 

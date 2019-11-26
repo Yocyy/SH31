@@ -5,6 +5,18 @@ cbuffer ConstantBuffer : register(b0)   //Shader.cppから転送される
     matrix Projection;
 }
 
+struct LIGHT
+{
+    float4 Direction;
+    float4 Diffuse;
+    float4 Ambient;
+};
+
+cbuffer LightBuffer : register(b1) //Shader.cppから転送される
+{
+    LIGHT Light;
+}
+
 struct VS_IN
 {
     float4 inPosition : POSITION0;
@@ -34,9 +46,10 @@ VS_OUT main(in VS_IN input)
     
     input.inNormal.w = 0.0;     //移動変換を無くして計算する
     float4 worldNormal = mul(input.inNormal, World);    //座標変換
-    float light = -dot(worldNormal, float4(0.0, -1.0, 0.0, 0.0));   //真上から光がきたと仮定する(長さは１)
+    float light = 0.5 -dot(worldNormal, Light.Direction) * 0.5; //真上から光がきたと仮定する(長さは１)
     light = saturate(light);    //0以下を0に、1以上を1にする関数
     output.outDiffuse = input.inDiffuse * light;    //ライトを最後にかける
+    output.outDiffuse += Light.Diffuse;
     
     return output; //戻り値
 }

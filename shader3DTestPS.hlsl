@@ -34,5 +34,6 @@ float4 main(in PS_IN input) : SV_Target
     //outDiffuse.g *= 0.74;
     //outDiffuse.b *= 0.43;
     
+    
     return outDiffuse;
 }

@@ -18,6 +18,9 @@ private:
 	ID3D11Buffer*			m_ConstantBuffer;
 	CONSTANT				m_Constant;
 
+	ID3D11Buffer*			m_LightBuffer;
+	LIGHT m_Light;
+
 public:
 	void Init( const char* VertexShader, const char* PixelShader );
 	void Uninit();
