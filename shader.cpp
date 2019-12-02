@@ -1,4 +1,3 @@
-
 #include "main.h"
 #include "renderer.h"
 #include "shader.h"
@@ -8,7 +7,7 @@
 
 
 
-void CShader::Init( const char* VertexShader, const char* PixelShader )
+void CShader::Init(const char* VertexShader, const char* PixelShader)
 {
 
 	// 頂点シェーダ生成
@@ -91,9 +90,11 @@ void CShader::Init( const char* VertexShader, const char* PixelShader )
 		hBufferDesc.ByteWidth = sizeof(LIGHT);
 		CRenderer::GetDevice()->CreateBuffer(&hBufferDesc, NULL, &m_LightBuffer);
 	}
-		m_Light.Direction = XMFLOAT4(0.0f, -0.0f, 0.0f, 0.0f);	//ライトベクトル
-		m_Light.Diffuse = COLOR(0.0f, 0.0f, 0.0f, 0.0f);	//ライトカラー
-		m_Light.Ambient = COLOR(0.0f, 0.0f, 0.0f, 0.0f);	//環境光
+
+
+	m_Light.Direction = XMFLOAT4(0.0f, -1.0f, 0.0f, 0.0f);	//ライトベクトル
+	m_Light.Diffuse = COLOR(0.0f, 0.0f, 0.0f, 0.0f);	//ライトカラー
+	m_Light.Ambient = COLOR(0.0f, 0.0f, 0.0f, 0.0f);	//環境光
 }
 
 
@@ -134,4 +135,3 @@ void CShader::Set()
 	CRenderer::GetDeviceContext()->PSSetConstantBuffers(0, 1, &m_ConstantBuffer);
 	CRenderer::GetDeviceContext()->PSSetConstantBuffers(1, 1, &m_LightBuffer);
 }
-

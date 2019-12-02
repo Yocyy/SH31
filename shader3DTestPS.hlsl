@@ -10,6 +10,7 @@ struct PS_IN
     float4 inPosition : SV_POSITION;
     float4 inDiffuse : COLOR0;
     float2 inTexCoord : TEXCOORD0;
+    float4 inSpecular : COROL1;
 };
 
 float4 main(in PS_IN input) : SV_Target
@@ -18,7 +19,8 @@ float4 main(in PS_IN input) : SV_Target
     outDiffuse = g_Texture.Sample(g_SamplerState, input.inTexCoord);    //画像のリソースから画像を表示
     
     outDiffuse *= input.inDiffuse;
-    
+    outDiffuse += input.inSpecular;
+    outDiffuse.a = 1.0f;
    //マルチテクスチャ設定
     //outDiffuse = g_Texture[0].Sample(g_SamplerState, input.inTexCoord);
     //outDiffuse *= g_Texture[1].Sample(g_SamplerState, input.inTexCoord);
@@ -33,7 +35,6 @@ float4 main(in PS_IN input) : SV_Target
     //outDiffuse.r *= 1.07;
     //outDiffuse.g *= 0.74;
     //outDiffuse.b *= 0.43;
-    
     
     return outDiffuse;
 }

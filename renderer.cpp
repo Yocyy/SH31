@@ -103,7 +103,7 @@ void CRenderer::Init()
 	D3D11_RASTERIZER_DESC rd;
 	ZeroMemory(&rd, sizeof(rd));
 	rd.FillMode = D3D11_FILL_SOLID; //Debug D3D11_FILL_WIREFRAME
-	rd.CullMode = D3D11_CULL_BACK;
+	rd.CullMode = D3D11_CULL_NONE;
 	rd.DepthClipEnable = TRUE;
 	rd.MultisampleEnable = FALSE;
 
@@ -263,4 +263,3 @@ void CRenderer::DrawIndexed( unsigned int IndexCount, unsigned int StartIndexLoc
 	m_ImmediateContext->DrawIndexed( IndexCount, StartIndexLocation, BaseVertexLocation );
 
 }
-

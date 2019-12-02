@@ -28,5 +28,4 @@ void main(in PS_IN input, out float4 outDiffuse : SV_Target)
     outDiffuse.g *= 0.74;
     outDiffuse.b *= 0.43;
 
-
 }

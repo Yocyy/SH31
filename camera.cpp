@@ -1,14 +1,18 @@
 #include "Camera.h"
-
-
+#include "input.h"
+#include "shader.h"
 
 
 void CCamera::Init()
 {
+	m_Shader = new CShader();
 
 	m_Position = XMFLOAT3(0.0f, 5.0f, -10.0f);
 	m_Rotation = XMFLOAT3(0.5f, 0.0f, 0.0f);
-
+	m_Front = XMFLOAT3(0.0f, 0.0f,1.0f);
+	m_Right = XMFLOAT3(0.0f, 1.0f,0.0f);
+	m_Up	= XMFLOAT3(1.0f, 0.0f,0.0f);
+	Move_Speed = 1.0f;
 
 	m_Viewport.left = 0;
 	m_Viewport.top = 0;
@@ -55,7 +59,8 @@ void CCamera::Update()
 		// ビューマトリクス設定
 		m_InvViewMatrix = XMMatrixRotationRollPitchYaw(m_Rotation.x, m_Rotation.y, m_Rotation.z);
 		m_InvViewMatrix *= XMMatrixTranslation(m_Position.x, m_Position.y, m_Position.z);
-
+		XMFLOAT4 CameraPos4f = XMFLOAT4(m_Position.x,m_Position.y,m_Position.x,NULL);
+		m_Shader->SetCameraPosition(&CameraPos4f);
 		XMVECTOR det;
 		m_ViewMatrix = XMMatrixInverse(&det, m_InvViewMatrix);
 	}
@@ -63,6 +68,26 @@ void CCamera::Update()
 
 bool CCamera::CheckInput()
 {
+	if (CInput::GetKeyPress(VK_UP))
+	{
+		m_Position.y += Move_Speed;
+		return true;
+	}
+	if (CInput::GetKeyPress(VK_DOWN))
+	{
+		m_Position.y -= Move_Speed;
+		return true;
+	}
+	if (CInput::GetKeyPress(VK_RIGHT))
+	{
+		m_Position.x += Move_Speed;
+		return true;
+	}
+	if (CInput::GetKeyPress(VK_LEFT))
+	{
+		m_Position.x -= Move_Speed;
+		return true;
+	}
 	return false;
 }
 

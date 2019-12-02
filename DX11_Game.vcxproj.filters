@@ -27,8 +27,11 @@
     <Filter Include="ソース ファイル\hlsl">
       <UniqueIdentifier>{25db1fc8-0070-4081-a54d-cd2cdd09820d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ソース ファイル\cso">
-      <UniqueIdentifier>{696b27c6-9ae8-4924-8ed1-8a65a566904a}</UniqueIdentifier>
+    <Filter Include="ソース ファイル\fbxsdk">
+      <UniqueIdentifier>{9c48706c-1bea-42f8-ae8e-6de3615c5921}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Light">
+      <UniqueIdentifier>{97e878c8-85f7-43d8-8443-c3065dc90916}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -50,14 +53,29 @@
     <ClCompile Include="input.cpp">
       <Filter>ソース ファイル\system</Filter>
     </ClCompile>
-    <ClCompile Include="shader.cpp">
-      <Filter>ソース ファイル\shader</Filter>
-    </ClCompile>
     <ClCompile Include="camera.cpp">
       <Filter>ソース ファイル\game_object</Filter>
     </ClCompile>
     <ClCompile Include="field.cpp">
       <Filter>ソース ファイル\game_object</Filter>
+    </ClCompile>
+    <ClCompile Include="shader.cpp">
+      <Filter>ソース ファイル\shader</Filter>
+    </ClCompile>
+    <ClCompile Include="fbx.cpp">
+      <Filter>ソース ファイル\fbxsdk</Filter>
+    </ClCompile>
+    <ClCompile Include="player.cpp">
+      <Filter>ソース ファイル\game_object</Filter>
+    </ClCompile>
+    <ClCompile Include="fbxManager.cpp">
+      <Filter>ソース ファイル\fbxsdk</Filter>
+    </ClCompile>
+    <ClCompile Include="Light.cpp">
+      <Filter>ソース ファイル\Light</Filter>
+    </ClCompile>
+    <ClCompile Include="model.cpp">
+      <Filter>ソース ファイル\resource</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -94,15 +112,24 @@
     <ClInclude Include="field.h">
       <Filter>ソース ファイル\game_object</Filter>
     </ClInclude>
+    <ClInclude Include="fbx.h">
+      <Filter>ソース ファイル\fbxsdk</Filter>
+    </ClInclude>
+    <ClInclude Include="player.h">
+      <Filter>ソース ファイル\game_object</Filter>
+    </ClInclude>
+    <ClInclude Include="fbxManager.h">
+      <Filter>ソース ファイル\fbxsdk</Filter>
+    </ClInclude>
+    <ClInclude Include="Light.h">
+      <Filter>ソース ファイル\Light</Filter>
+    </ClInclude>
+    <ClInclude Include="model.h">
+      <Filter>ソース ファイル\resource</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="ClassDiagram.cd" />
-    <None Include="x64\Debug\shader2DTestPS.cso">
-      <Filter>ソース ファイル\cso</Filter>
-    </None>
-    <None Include="x64\Debug\shader2DTestVS.cso">
-      <Filter>ソース ファイル\cso</Filter>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="shader2DTestVS.hlsl">

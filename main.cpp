@@ -3,7 +3,6 @@
 #include "main.h"
 #include "manager.h"
 
-
 const char* CLASS_NAME = "DX11AppClass";
 const char* WINDOW_NAME = "DX11";
 
@@ -77,6 +76,7 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 	MSG msg;
 	while(1)
 	{
+
         if(PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
 		{
 			if(msg.message == WM_QUIT)

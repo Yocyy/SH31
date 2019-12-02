@@ -8,7 +8,6 @@
 #include "polygon.h"
 
 
-
 CScene*	CManager::m_Scene;
 
 

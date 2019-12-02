@@ -14,9 +14,9 @@ private:
 
 	ID3D11Buffer*	m_VertexBuffer = NULL;
 	CShader*		m_Shader;
-
+	float Rot_Speed = 0.2f;
 	CTexture*		m_Texture;
-
+	bool inputValue;
 public:
 	CField();
 	~CField();
@@ -25,4 +25,5 @@ public:
 	void Uninit();
 	void Update();
 	void Draw();
+	bool CheckInput();
 };

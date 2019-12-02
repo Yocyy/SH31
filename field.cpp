@@ -1,6 +1,7 @@
+#include "main.h"
+#include "input.h"
 #include "field.h"
 #include "scene.h"
-
 
 
 CField::CField()
@@ -70,6 +71,22 @@ void CField::Uninit()
 
 void CField::Update()
 {
+	if (CInput::GetKeyPress('W'))
+	{
+		m_Rotation.y += Rot_Speed;
+	}
+	if (CInput::GetKeyPress('S'))
+	{
+		m_Rotation.y -= Rot_Speed;
+	}
+	if (CInput::GetKeyPress('D'))
+	{
+		m_Rotation.x += Rot_Speed;
+	}
+	if (CInput::GetKeyPress('A'))
+	{
+		m_Rotation.x -= Rot_Speed;
+	}
 }
 
 void CField::Draw()
@@ -83,7 +100,7 @@ void CField::Draw()
 
 	XMMATRIX world;
 	world = XMMatrixScaling(1.0f, 1.0f, 1.0f);
-	world *= XMMatrixRotationRollPitchYaw(0.0f, 0.0f, 0.0f);
+	world *= XMMatrixRotationRollPitchYaw(m_Rotation.x, m_Rotation.y, m_Rotation.z);
 	world *= XMMatrixTranslation(0.0f, -5.0f, 0.0f);
 
 	XMFLOAT4X4 projection;
@@ -104,4 +121,29 @@ void CField::Draw()
 
 	// ƒ|ƒŠƒSƒ“•`‰æ
 	CRenderer::GetDeviceContext()->Draw(4, 0);
+}
+
+bool CField::CheckInput()
+{
+	//if (CInput::GetKeyPress('W'))
+	//{
+	//	m_Rotation.y += Rot_Speed;
+	//	return true;
+	//}
+	//if (CInput::GetKeyPress('S'))
+	//{
+	//	m_Rotation.y -= Rot_Speed;
+	//	return true;
+	//}
+	//if (CInput::GetKeyPress('D'))
+	//{
+	//	m_Rotation.x += Rot_Speed;
+	//	return true;
+	//}
+	//if (CInput::GetKeyPress('A'))
+	//{
+	//	m_Rotation.x -= Rot_Speed;
+	//	return true;
+	//}
+	return false;
 }

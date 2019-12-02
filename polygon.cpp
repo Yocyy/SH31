@@ -32,9 +32,9 @@ void CPolygon::Init()
 	vertex[3].TexCoord = XMFLOAT2(1.0f, 1.0f);
 
 	m_Texture[0] = new CTexture();
-	m_Texture[0]->Load("data/TEXTURE/cocoon.tga");
+	m_Texture[0]->Load("data/TEXTURE/smoke.tga");
 	m_Texture[1] = new CTexture();
-	m_Texture[1]->Load("data/TEXTURE/cocoon.tga");
+	m_Texture[1]->Load("data/TEXTURE/HAL‚Ì‚ ‚¢‚Â.tga");
 
 	D3D11_BUFFER_DESC bd;
 	ZeroMemory( &bd, sizeof(bd) );
