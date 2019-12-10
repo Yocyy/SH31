@@ -1,13 +1,9 @@
 #pragma once
-#include "main.h"
-#include "renderer.h"
+
 #include "game_object.h"
-#include "texture.h"
-#include "shader.h"
-#include "manager.h"
-#include "Camera.h"
 
 class CScene;
+class CShader;
 class CField : public CGameObject
 {
 private:

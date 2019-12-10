@@ -13,6 +13,9 @@ using namespace DirectX;
 #pragma comment (lib, "winmm.lib")
 #pragma comment (lib, "xaudio2.lib")
 
+//stb-master
+#include <stb-master/stb_image.h>
+#include <stb-master/stb_image_write.h>
 
 #define SCREEN_WIDTH	(960)			// ウインドウの幅
 #define SCREEN_HEIGHT	(540)			// ウインドウの高さ

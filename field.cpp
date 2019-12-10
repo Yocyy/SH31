@@ -2,7 +2,11 @@
 #include "input.h"
 #include "field.h"
 #include "scene.h"
-
+#include "renderer.h"
+#include "texture.h"
+#include "shader.h"
+#include "manager.h"
+#include "Camera.h"
 
 CField::CField()
 {
@@ -73,19 +77,36 @@ void CField::Update()
 {
 	if (CInput::GetKeyPress('W'))
 	{
-		m_Rotation.y += Rot_Speed;
+		m_Rotation.x += Rot_Speed;
 	}
 	if (CInput::GetKeyPress('S'))
 	{
-		m_Rotation.y -= Rot_Speed;
+		m_Rotation.x -= Rot_Speed;
 	}
 	if (CInput::GetKeyPress('D'))
 	{
-		m_Rotation.x += Rot_Speed;
+		m_Rotation.y += Rot_Speed;
 	}
 	if (CInput::GetKeyPress('A'))
 	{
-		m_Rotation.x -= Rot_Speed;
+		m_Rotation.y -= Rot_Speed;
+	}
+
+	if (CInput::GetKeyPress(VK_UP))
+	{
+		m_Position.z += Rot_Speed;
+	}
+	if (CInput::GetKeyPress(VK_DOWN))
+	{
+		m_Position.z -= Rot_Speed;
+	}
+	if (CInput::GetKeyPress(VK_RIGHT))
+	{
+		m_Position.x += Rot_Speed;
+	}
+	if (CInput::GetKeyPress(VK_LEFT))
+	{
+		m_Position.x -= Rot_Speed;
 	}
 }
 
@@ -101,7 +122,7 @@ void CField::Draw()
 	XMMATRIX world;
 	world = XMMatrixScaling(1.0f, 1.0f, 1.0f);
 	world *= XMMatrixRotationRollPitchYaw(m_Rotation.x, m_Rotation.y, m_Rotation.z);
-	world *= XMMatrixTranslation(0.0f, -5.0f, 0.0f);
+	world *= XMMatrixTranslation(m_Position.x, m_Position.y, m_Position.z);
 
 	XMFLOAT4X4 projection;
 	XMFLOAT4X4 matrix;
@@ -112,6 +133,7 @@ void CField::Draw()
 	XMStoreFloat4x4(&matrix, camera->GetViewMatrix());
 	m_Shader->SetViewMatrix(&matrix);
 	m_Shader->SetProjectionMatrix(&projection);
+	m_Shader->SetCameraPosition(&camera->GetCameraPosition4f());
 
 	m_Shader->Set();
 

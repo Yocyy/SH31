@@ -3,9 +3,9 @@
 
 struct CONSTANT
 {
-	XMFLOAT4X4 WorldMatrix;
-	XMFLOAT4X4 ViewMatrix;
-	XMFLOAT4X4 ProjectionMatrix;
+	XMFLOAT4X4	WorldMatrix;
+	XMFLOAT4X4	ViewMatrix;
+	XMFLOAT4X4	ProjectionMatrix;
 	XMFLOAT4	CameraPosition;
 };
 
@@ -20,7 +20,7 @@ private:
 	CONSTANT				m_Constant;
 
 	ID3D11Buffer*			m_LightBuffer;
-	LIGHT m_Light;
+	LIGHT					m_Light;
 
 public:
 	void Init( const char* VertexShader, const char* PixelShader );

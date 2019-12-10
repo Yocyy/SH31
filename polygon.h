@@ -1,9 +1,8 @@
 #pragma once
 
+#include "game_object.h"
 
-#include "shader.h"
-
-
+class CShader;
 class CPolygon : public CGameObject
 {
 private:

@@ -13,6 +13,17 @@ struct VERTEX_3D
 	XMFLOAT2 TexCoord;
 };
 
+// 法線マッピング構造体
+struct VERTEX_3D_NORMAL
+{
+	XMFLOAT3 Position;
+	XMFLOAT3 Normal;
+	XMFLOAT3 Binormal;	// バイノーマル
+	XMFLOAT3 Tangent;	// タンジェント
+	XMFLOAT4 Diffuse;
+	XMFLOAT2 TexCoord;
+};
+
 
 // 色構造体
 struct COLOR

@@ -33,6 +33,9 @@
     <Filter Include="ソース ファイル\Light">
       <UniqueIdentifier>{97e878c8-85f7-43d8-8443-c3065dc90916}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\stb-master">
+      <UniqueIdentifier>{c5cd3dcf-b255-4bfa-998b-51a51715eaf7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -65,9 +68,6 @@
     <ClCompile Include="fbx.cpp">
       <Filter>ソース ファイル\fbxsdk</Filter>
     </ClCompile>
-    <ClCompile Include="player.cpp">
-      <Filter>ソース ファイル\game_object</Filter>
-    </ClCompile>
     <ClCompile Include="fbxManager.cpp">
       <Filter>ソース ファイル\fbxsdk</Filter>
     </ClCompile>
@@ -76,6 +76,15 @@
     </ClCompile>
     <ClCompile Include="model.cpp">
       <Filter>ソース ファイル\resource</Filter>
+    </ClCompile>
+    <ClCompile Include="stb-texture.cpp">
+      <Filter>ソース ファイル\stb-master</Filter>
+    </ClCompile>
+    <ClCompile Include="shaderNormal.cpp">
+      <Filter>ソース ファイル\shader</Filter>
+    </ClCompile>
+    <ClCompile Include="fieldNormal.cpp">
+      <Filter>ソース ファイル\game_object</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -115,9 +124,6 @@
     <ClInclude Include="fbx.h">
       <Filter>ソース ファイル\fbxsdk</Filter>
     </ClInclude>
-    <ClInclude Include="player.h">
-      <Filter>ソース ファイル\game_object</Filter>
-    </ClInclude>
     <ClInclude Include="fbxManager.h">
       <Filter>ソース ファイル\fbxsdk</Filter>
     </ClInclude>
@@ -126,6 +132,15 @@
     </ClInclude>
     <ClInclude Include="model.h">
       <Filter>ソース ファイル\resource</Filter>
+    </ClInclude>
+    <ClInclude Include="stb-texture.h">
+      <Filter>ソース ファイル\stb-master</Filter>
+    </ClInclude>
+    <ClInclude Include="shaderNormal.h">
+      <Filter>ソース ファイル\shader</Filter>
+    </ClInclude>
+    <ClInclude Include="fieldNormal.h">
+      <Filter>ソース ファイル\game_object</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -142,6 +157,12 @@
       <Filter>ソース ファイル\hlsl</Filter>
     </FxCompile>
     <FxCompile Include="shader3DTestVS.hlsl">
+      <Filter>ソース ファイル\hlsl</Filter>
+    </FxCompile>
+    <FxCompile Include="Shader3DNormalMappingVS.hlsl">
+      <Filter>ソース ファイル\hlsl</Filter>
+    </FxCompile>
+    <FxCompile Include="Shader3DNormalMappingPS.hlsl">
       <Filter>ソース ファイル\hlsl</Filter>
     </FxCompile>
   </ItemGroup>

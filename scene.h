@@ -9,7 +9,7 @@
 #include "polygon.h"
 #include "Field.h"
 #include "camera.h"
-#include "player.h"
+#include "fieldNormal.h"
 
 class CScene
 {
@@ -23,9 +23,10 @@ public:
 
 	virtual void Init()
 	{
-		AddGameObject<CField>();
-		AddGameObject<CPolygon>();
 		AddGameObject<CCamera>();
+		AddGameObject<CField>();
+		AddGameObject<CFieldNormal>();
+		AddGameObject<CPolygon>();
 		//AddGameObject<CPlayer>();
 	}
 

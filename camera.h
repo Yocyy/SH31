@@ -1,8 +1,7 @@
-
 #pragma once
-#include "main.h"
-#include "renderer.h"
+
 #include "game_object.h"
+
 class CShader;
 class CCamera : public CGameObject
 {
@@ -25,5 +24,5 @@ public:
 
 	bool CheckInput();
 	XMMATRIX& GetViewMatrix();
-
+	XMFLOAT4  GetCameraPosition4f();
 };
