@@ -27,21 +27,21 @@ void CFieldNormal::Init()
 	vertex[1].Diffuse = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
 	vertex[1].TexCoord = XMFLOAT2(1.0f, 0.0f);
 
-	vertex[2].Position = XMFLOAT3(0.0f, 0.0f, -10.0f);
+	vertex[2].Position = XMFLOAT3(0.0f, 0.0f, 0.0f);
 	vertex[2].Normal = XMFLOAT3(0.0f, 1.0f, 0.0f);
 	vertex[2].Binormal = XMFLOAT3(1.0f, 0.0f, 0.0f);
 	vertex[2].Tangent = XMFLOAT3(0.0f, 0.0f, 1.0f);
 	vertex[2].Diffuse = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
 	vertex[2].TexCoord = XMFLOAT2(0.0f, 1.0f);
 
-	vertex[3].Position = XMFLOAT3(10.0f, 0.0f, -10.0f);
+	vertex[3].Position = XMFLOAT3(10.0f, 0.0f, 0.0f);
 	vertex[3].Normal = XMFLOAT3(0.0f, 1.0f, 0.0f);
 	vertex[3].Binormal = XMFLOAT3(1.0f, 0.0f, 0.0f);
 	vertex[3].Tangent = XMFLOAT3(0.0f, 0.0f, 1.0f);
 	vertex[3].Diffuse = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
 	vertex[3].TexCoord = XMFLOAT2(1.0f, 1.0f);
 
-	m_Position = XMFLOAT3(10, 0, 0);	//‰Šú’l
+	m_Position = XMFLOAT3(10, -5, 0);	//‰Šú’l
 
 	D3D11_BUFFER_DESC bd;
 	ZeroMemory(&bd, sizeof(bd));
@@ -60,6 +60,8 @@ void CFieldNormal::Init()
 	m_Texture[0]->Load("data/TEXTURE/Rock_Normal.tga");
 	m_Texture[1] = new CTexture();
 	m_Texture[1]->Load("data/TEXTURE/field004.tga");
+	m_Texture[2] = new CTexture();
+	m_Texture[2]->Load("data/TEXTURE/Rock_Displacement.tga");
 
 	m_Shader = new CShaderNormal();
 	m_Shader->Init("x64/Debug/Shader3DNormalMappingVS.cso", "x64/Debug/Shader3DNormalMappingPS.cso");
@@ -76,6 +78,8 @@ void CFieldNormal::Uninit()
 	delete m_Texture[0];
 	m_Texture[1]->Unload();
 	delete m_Texture[1];
+	m_Texture[2]->Unload();
+	delete m_Texture[2];
 }
 
 void CFieldNormal::Update()
@@ -95,6 +99,15 @@ void CFieldNormal::Update()
 	if (CInput::GetKeyPress('A'))
 	{
 		m_Rotation.y -= Rot_Speed;
+	}
+
+	if (CInput::GetKeyPress('I'))
+	{
+		m_Position.y += Rot_Speed;
+	}
+	if (CInput::GetKeyPress('K'))
+	{
+		m_Position.y -= Rot_Speed;
 	}
 
 	if (CInput::GetKeyPress(VK_UP))
@@ -122,7 +135,7 @@ void CFieldNormal::Draw()
 	UINT stride = sizeof(VERTEX_3D_NORMAL);
 	UINT offset = 0;
 	CRenderer::GetDeviceContext()->IASetVertexBuffers(0, 1, &m_VertexBuffer, &stride, &offset);
-	CRenderer::SetTexture(m_Texture[0], m_Texture[1]);
+	CRenderer::SetTexture(m_Texture[0], m_Texture[1],m_Texture[2]);
 
 	XMMATRIX world;
 	world = XMMatrixScaling(1.0f, 1.0f, 1.0f);

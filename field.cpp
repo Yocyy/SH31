@@ -8,15 +8,6 @@
 #include "manager.h"
 #include "Camera.h"
 
-CField::CField()
-{
-}
-
-
-CField::~CField()
-{
-}
-
 void CField::Init()
 {
 	VERTEX_3D vertex[4];

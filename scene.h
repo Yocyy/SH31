@@ -24,7 +24,7 @@ public:
 	virtual void Init()
 	{
 		AddGameObject<CCamera>();
-		AddGameObject<CField>();
+		//AddGameObject<CField>();
 		AddGameObject<CFieldNormal>();
 		AddGameObject<CPolygon>();
 		//AddGameObject<CPlayer>();

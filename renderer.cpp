@@ -256,6 +256,11 @@ void CRenderer::SetTexture(CTexture* Texture, CTexture* SecTexture)
 
 }
 
+void  CRenderer::SetTexture(CTexture* NormalTexture, CTexture* Texture, CTexture* HeightTexture) {
+	ID3D11ShaderResourceView* srv[3] = { NormalTexture->GetShaderResourceView() , Texture->GetShaderResourceView() ,HeightTexture->GetShaderResourceView()};
+	m_ImmediateContext->PSSetShaderResources(0, 3, srv);
+}
+
 void CRenderer::DrawIndexed( unsigned int IndexCount, unsigned int StartIndexLocation, int BaseVertexLocation )
 {
 

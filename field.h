@@ -4,6 +4,7 @@
 
 class CScene;
 class CShader;
+
 class CField : public CGameObject
 {
 private:
@@ -14,9 +15,6 @@ private:
 	CTexture*		m_Texture;
 	bool inputValue;
 public:
-	CField();
-	~CField();
-
 	void Init();
 	void Uninit();
 	void Update();

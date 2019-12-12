@@ -2,7 +2,7 @@
 // グローバル変数
 //*****************************************************************************
 //Texture2D g_Texture : register(t0);
-Texture2D g_Texture[2] : register(t0);
+Texture2D g_Texture[3] : register(t0);
 SamplerState g_SamplerState : register(s0);
 
 cbuffer ConstantBuffer : register(b0) //Shader.cppから転送される
@@ -39,13 +39,27 @@ struct PS_IN
 
 float4 main(in PS_IN input) : SV_Target
 {
+    float4 eyev = input.inWorldPosition - CameraPosition; //視線ベクトル    カメラから面の頂点までのベクトル
+    eyev = normalize(eyev); //正規化
+    
+    matrix mat = { input.inBinormal, -input.inTangent, input.inNormal, float4(0, 0, 0, 1) };
+    matrix invmat = transpose(mat); //逆行列
+    float3 invEyev = mul(eyev, invmat).xyz;
+    float heightMap = (g_Texture[2].Sample(g_SamplerState, input.inTexCoord).r - 0.5) * 0.2; //50％グレー
+    input.inTexCoord += invEyev.xy * -heightMap;
+    
     float4 outDiffuse;
     float4 normalMap = g_Texture[0].Sample(g_SamplerState, input.inTexCoord); //ノーマルマップ取得、色情報を圧縮したため0.0～1.0
-    normalMap = (normalMap * 2.0) - 1.0;    //0.0～1.0を-1.0～1.0に変換
+    normalMap = (normalMap * 2.0) - 1.0; //0.0～1.0を-1.0～1.0に変換
     normalMap = (normalMap.x * input.inBinormal) + (normalMap.y * input.inTangent) + (normalMap.z * input.inNormal); //テクスチャの向きと法線の向きを合わせる
     normalMap.w = 0.0;
-    normalMap = normalize(normalMap);   //正規化
-    
+    normalMap = normalize(normalMap); //正規化
+   
+    //スペキュラー設定
+    float3 refv;
+    //refv = reflect(Light.Direction.xyz, input.inNormal.xyz);
+    refv = reflect(Light.Direction.xyz, normalMap.xyz); //反射ベクトルを求める    １、反射させる光　２、反射する法線
+    refv = normalize(refv); //正規化
  
     outDiffuse = g_Texture[1].Sample(g_SamplerState, input.inTexCoord); //テクスチャの色情報を乗算
     outDiffuse *= input.inDiffuse; //画像のリソースから画像を表示
@@ -55,13 +69,6 @@ float4 main(in PS_IN input) : SV_Target
     outDiffuse *= light;
     outDiffuse.a = 1.0;
     
-    //スペキュラー設定
-    float3 refv;
-    //refv = reflect(Light.Direction.xyz, input.inNormal.xyz);
-    refv = reflect(Light.Direction.xyz, normalMap.xyz); //反射ベクトルを求める    １、反射させる光　２、反射する法線
-    refv = normalize(refv); //正規化
-    float3 eyev = input.inWorldPosition - CameraPosition; //視線ベクトル    カメラから面の頂点までのベクトル
-    eyev = normalize(eyev); //正規化
     float specular = -dot(eyev, refv);
     specular = saturate(specular);
     specular = pow(specular, 10); //10乗   大きくすると強くなり、小さくすると弱くなる
