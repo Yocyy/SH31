@@ -36,6 +36,9 @@
     <Filter Include="ソース ファイル\stb-master">
       <UniqueIdentifier>{c5cd3dcf-b255-4bfa-998b-51a51715eaf7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\Model">
+      <UniqueIdentifier>{86e57648-ce13-4937-b6a5-a57dfbbdb2c9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -74,9 +77,6 @@
     <ClCompile Include="Light.cpp">
       <Filter>ソース ファイル\Light</Filter>
     </ClCompile>
-    <ClCompile Include="model.cpp">
-      <Filter>ソース ファイル\resource</Filter>
-    </ClCompile>
     <ClCompile Include="stb-texture.cpp">
       <Filter>ソース ファイル\stb-master</Filter>
     </ClCompile>
@@ -84,6 +84,18 @@
       <Filter>ソース ファイル\shader</Filter>
     </ClCompile>
     <ClCompile Include="fieldNormal.cpp">
+      <Filter>ソース ファイル\game_object</Filter>
+    </ClCompile>
+    <ClCompile Include="toonfield.cpp">
+      <Filter>ソース ファイル\game_object</Filter>
+    </ClCompile>
+    <ClCompile Include="Mesh.cpp">
+      <Filter>ソース ファイル\Model</Filter>
+    </ClCompile>
+    <ClCompile Include="Model.cpp">
+      <Filter>ソース ファイル\Model</Filter>
+    </ClCompile>
+    <ClCompile Include="shadowpolygon.cpp">
       <Filter>ソース ファイル\game_object</Filter>
     </ClCompile>
   </ItemGroup>
@@ -130,9 +142,6 @@
     <ClInclude Include="Light.h">
       <Filter>ソース ファイル\Light</Filter>
     </ClInclude>
-    <ClInclude Include="model.h">
-      <Filter>ソース ファイル\resource</Filter>
-    </ClInclude>
     <ClInclude Include="stb-texture.h">
       <Filter>ソース ファイル\stb-master</Filter>
     </ClInclude>
@@ -140,6 +149,18 @@
       <Filter>ソース ファイル\shader</Filter>
     </ClInclude>
     <ClInclude Include="fieldNormal.h">
+      <Filter>ソース ファイル\game_object</Filter>
+    </ClInclude>
+    <ClInclude Include="toonfield.h">
+      <Filter>ソース ファイル\game_object</Filter>
+    </ClInclude>
+    <ClInclude Include="Mesh.h">
+      <Filter>ソース ファイル\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="Model.h">
+      <Filter>ソース ファイル\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="shadowpolygon.h">
       <Filter>ソース ファイル\game_object</Filter>
     </ClInclude>
   </ItemGroup>
@@ -163,6 +184,12 @@
       <Filter>ソース ファイル\hlsl</Filter>
     </FxCompile>
     <FxCompile Include="Shader3DNormalMappingPS.hlsl">
+      <Filter>ソース ファイル\hlsl</Filter>
+    </FxCompile>
+    <FxCompile Include="shader3DToonPS.hlsl">
+      <Filter>ソース ファイル\hlsl</Filter>
+    </FxCompile>
+    <FxCompile Include="shader2DShadowPS.hlsl">
       <Filter>ソース ファイル\hlsl</Filter>
     </FxCompile>
   </ItemGroup>

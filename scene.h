@@ -10,6 +10,8 @@
 #include "Field.h"
 #include "camera.h"
 #include "fieldNormal.h"
+#include "toonfield.h"
+#include "shadowpolygon.h"
 
 class CScene
 {
@@ -27,7 +29,9 @@ public:
 		//AddGameObject<CField>();
 		AddGameObject<CFieldNormal>();
 		AddGameObject<CPolygon>();
+		AddGameObject<CShadowPolygon>();
 		//AddGameObject<CPlayer>();
+		//AddGameObject<CFieldToon>();
 	}
 
 	virtual void Uninit()

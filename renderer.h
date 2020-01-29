@@ -99,7 +99,8 @@ private:
 	static ID3D11RenderTargetView* m_RenderTargetView;
 	static ID3D11DepthStencilView* m_DepthStencilView;
 
-
+	static ID3D11DepthStencilView* m_ShadowDepthStencilView;	//影用のZバッファ
+	static ID3D11ShaderResourceView* m_ShadowShaderResourceView;//画像レンダリング用SRV
 
 
 
@@ -116,6 +117,7 @@ public:
 	static void Init();
 	static void Uninit();
 	static void Begin();
+	static void BeginShadow();
 	static void End();
 
 	static void SetDepthEnable(bool Enable);
@@ -124,6 +126,7 @@ public:
 	static void SetTexture( CTexture* Texture);
 	static void SetTexture(CTexture* Texture, CTexture* SecTexture);
 	static void SetTexture(CTexture* NormalTexture, CTexture* Texture, CTexture* HeightTexture);
+	static void SetShadowTexture(unsigned int Slot);
 	static void DrawIndexed( unsigned int IndexCount, unsigned int StartIndexLocation, int BaseVertexLocation );
 
 	static ID3D11Device* GetDevice( void ){ return m_D3DDevice; }

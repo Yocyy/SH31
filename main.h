@@ -9,9 +9,12 @@
 #include <DirectXMath.h>
 using namespace DirectX;
 
-#pragma comment (lib, "d3d11.lib")
-#pragma comment (lib, "winmm.lib")
-#pragma comment (lib, "xaudio2.lib")
+//プロパティのリンカーに記載
+//#pragma comment (lib, "d3d11.lib")
+//#pragma comment (lib, "winmm.lib")
+//#pragma comment (lib, "xaudio2.lib")
+
+
 
 //stb-master
 #include <stb-master/stb_image.h>

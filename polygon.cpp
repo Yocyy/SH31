@@ -102,5 +102,4 @@ void CPolygon::Draw()
 
 	// ƒ|ƒŠƒSƒ“•`‰æ
 	CRenderer::GetDeviceContext()->Draw( 4, 0 );
-
 }

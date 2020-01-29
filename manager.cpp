@@ -45,6 +45,10 @@ void CManager::Update()
 void CManager::Draw()
 {
 
+	CRenderer::BeginShadow();
+
+	m_Scene->Draw();
+
 	CRenderer::Begin();
 
 	m_Scene->Draw();

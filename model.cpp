@@ -1,467 +1,281 @@
-#include "main.h"
-#include "renderer.h"
-#include "texture.h"
-#include "model.h"
-
-void CModel::Draw()
-{
-	
-	// 頂点バッファ設定
-	CRenderer::SetVertexBuffers( m_VertexBuffer );
-
-	// インデックスバッファ設定
-	CRenderer::SetIndexBuffer( m_IndexBuffer );
-
-	for( unsigned short i = 0; i < m_SubsetNum; i++ )
-	{
-		// マテリアル設定
-		//CRenderer::SetMaterial( m_SubsetArray[i].Material.Material );
-
-		// テクスチャ設定
-		CRenderer::SetTexture( m_SubsetArray[i].Material.Texture );
-
-		// ポリゴン描画
-		CRenderer::DrawIndexed( m_SubsetArray[i].IndexNum, m_SubsetArray[i].StartIndex, 0 );
-		//CRenderer::GetDeviceContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-		//CRenderer::GetDeviceContext()->DrawIndexedInstanced(m_SubsetArray[i].IndexNum, 9, m_SubsetArray[i].StartIndex, 0, 0);//10000を同時に描画
-	}
-
-}
-
-
-
-
-void CModel::Load( const char *FileName )
-{
-
-	MODEL model;
-	LoadObj( FileName, &model );
-
-
-
-	// 頂点バッファ生成
-	{
-		D3D11_BUFFER_DESC bd;
-		ZeroMemory( &bd, sizeof(bd) );
-		bd.Usage = D3D11_USAGE_DEFAULT;
-		bd.ByteWidth = sizeof( VERTEX_3D ) * model.VertexNum;
-		bd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-		bd.CPUAccessFlags = 0;
-
-		D3D11_SUBRESOURCE_DATA sd;
-		ZeroMemory( &sd, sizeof(sd) );
-		sd.pSysMem = model.VertexArray;
-
-		CRenderer::GetDevice()->CreateBuffer( &bd, &sd, &m_VertexBuffer );
-	}
-
-
-	// インデックスバッファ生成
-	{
-		D3D11_BUFFER_DESC bd;
-		ZeroMemory( &bd, sizeof(bd) );
-		bd.Usage = D3D11_USAGE_DEFAULT;
-		bd.ByteWidth = sizeof( unsigned short ) * model.IndexNum;
-		bd.BindFlags = D3D11_BIND_INDEX_BUFFER;
-		bd.CPUAccessFlags = 0;
-
-		D3D11_SUBRESOURCE_DATA sd;
-		ZeroMemory( &sd, sizeof(sd) );
-		sd.pSysMem = model.IndexArray;
-
-		CRenderer::GetDevice()->CreateBuffer( &bd, &sd, &m_IndexBuffer );
-	}
-
-	// サブセット設定
-	{
-		m_SubsetArray = new DX11_SUBSET[ model.SubsetNum ];
-		m_SubsetNum = model.SubsetNum;
-
-		for( unsigned short i = 0; i < model.SubsetNum; i++ )
-		{
-			m_SubsetArray[i].StartIndex = model.SubsetArray[i].StartIndex;
-			m_SubsetArray[i].IndexNum = model.SubsetArray[i].IndexNum;
-
-			m_SubsetArray[i].Material.Material = model.SubsetArray[i].Material.Material;
-
-			m_SubsetArray[i].Material.Texture = new CTexture();
-			m_SubsetArray[i].Material.Texture->Load( model.SubsetArray[i].Material.TextureName );
-
-		}
-	}
-
-	delete[] model.VertexArray;
-	delete[] model.IndexArray;
-	delete[] model.SubsetArray;
-
-}
-
-
-void CModel::Unload()
-{
-	m_VertexBuffer->Release();
-	m_IndexBuffer->Release();
-
-	for (unsigned short i = 0; i < m_SubsetNum; i++)
-	{
-		m_SubsetArray[i].Material.Texture->Unload();
-		delete m_SubsetArray[i].Material.Texture;
-	}
-
-	delete[] m_SubsetArray;
-
-}
-
-
-
-
-
-//モデル読込////////////////////////////////////////////
-void CModel::LoadObj( const char *FileName, MODEL *Model )
-{
-
-	XMFLOAT3	*positionArray;
-	XMFLOAT3	*normalArray;
-	XMFLOAT2	*texcoordArray;
-
-	unsigned short	positionNum = 0;
-	unsigned short	normalNum = 0;
-	unsigned short	texcoordNum = 0;
-	unsigned short	vertexNum = 0;
-	unsigned short	indexNum = 0;
-	unsigned short	in = 0;
-	unsigned short	subsetNum = 0;
-
-	MODEL_MATERIAL	*materialArray = nullptr;
-	unsigned short	materialNum = 0;
-
-	char str[256];
-	char *s;
-	char c;
-
-
-	FILE *file;
-	file = fopen( FileName, "rt" );
-	assert(file);
-
-
-
-	//要素数カウント
-	while( true )
-	{
-		fscanf( file, "%s", str );
-
-		if( feof( file ) != 0 )
-			break;
-
-		if( strcmp( str, "v" ) == 0 )
-		{
-			positionNum++;
-		}
-		else if( strcmp( str, "vn" ) == 0 )
-		{
-			normalNum++;
-		}
-		else if( strcmp( str, "vt" ) == 0 )
-		{
-			texcoordNum++;
-		}
-		else if( strcmp( str, "usemtl" ) == 0 )
-		{
-			subsetNum++;
-		}
-		else if( strcmp( str, "f" ) == 0 )
-		{
-			in = 0;
-
-			do
-			{
-				fscanf( file, "%s", str );
-				vertexNum++;
-				in++;
-				c = fgetc( file );
-			}
-			while( c != '\n' && c!= '\r' );
-
-			//四角は三角に分割
-			if( in == 4 )
-				in = 6;
-
-			indexNum += in;
-		}
-	}
-
-
-	//メモリ確保
-	positionArray = new XMFLOAT3[ positionNum ];
-	normalArray = new XMFLOAT3[ normalNum ];
-	texcoordArray = new XMFLOAT2[ texcoordNum ];
-
-
-	Model->VertexArray = new VERTEX_3D[ vertexNum ];
-	Model->VertexNum = vertexNum;
-
-	Model->IndexArray = new unsigned short[ indexNum ];
-	Model->IndexNum = indexNum;
-
-	Model->SubsetArray = new SUBSET[ subsetNum ];
-	Model->SubsetNum = subsetNum;
-
-
-
-
-	//要素読込
-	XMFLOAT3 *position = positionArray;
-	XMFLOAT3 *normal = normalArray;
-	XMFLOAT2 *texcoord = texcoordArray;
-
-	unsigned short vc = 0;
-	unsigned short ic = 0;
-	unsigned short sc = 0;
-
-
-	fseek( file, 0, SEEK_SET );
-
-	while( true )
-	{
-		fscanf( file, "%s", str );
-
-		if( feof( file ) != 0 )
-			break;
-
-		if( strcmp( str, "mtllib" ) == 0 )
-		{
-			//マテリアルファイル
-			fscanf( file, "%s", str );
-
-			char path[256];
-			strcpy( path, "asset/" );
-			strcat( path, str );
-
-			LoadMaterial( path, &materialArray, &materialNum );
-		}
-		else if( strcmp( str, "o" ) == 0 )
-		{
-			//オブジェクト名
-			fscanf( file, "%s", str );
-		}
-		else if( strcmp( str, "v" ) == 0 )
-		{
-			//頂点座標
-			fscanf( file, "%f", &position->x );
-			fscanf( file, "%f", &position->y );
-			fscanf( file, "%f", &position->z );
-			//position->x *= SCALE_MODEL;
-			//position->y *= SCALE_MODEL;
-			//position->z *= SCALE_MODEL;
-			position++;
-		}
-		else if( strcmp( str, "vn" ) == 0 )
-		{
-			//法線
-			fscanf( file, "%f", &normal->x );
-			fscanf( file, "%f", &normal->y );
-			fscanf( file, "%f", &normal->z );
-			normal++;
-		}
-		else if( strcmp( str, "vt" ) == 0 )
-		{
-			//テクスチャ座標
-			fscanf( file, "%f", &texcoord->x );
-			fscanf( file, "%f", &texcoord->y );
-			//texcoord->y = 1.0f - texcoord->y;
-			texcoord++;
-		}
-		else if( strcmp( str, "usemtl" ) == 0 )
-		{
-			//マテリアル
-			fscanf( file, "%s", str );
-
-			if( sc != 0 )
-				Model->SubsetArray[ sc - 1 ].IndexNum = ic - Model->SubsetArray[ sc - 1 ].StartIndex;
-
-			Model->SubsetArray[ sc ].StartIndex = ic;
-
-
-			for( unsigned short i = 0; i < materialNum; i++ )
-			{
-				if( strcmp( str, materialArray[i].Name ) == 0 )
-				{
-					Model->SubsetArray[ sc ].Material.Material = materialArray[i].Material;
-					strcpy( Model->SubsetArray[ sc ].Material.TextureName, materialArray[i].TextureName );
-					strcpy( Model->SubsetArray[ sc ].Material.Name, materialArray[i].Name );
-
-					break;
-				}
-			}
-
-			sc++;
-			
-		}
-		else if( strcmp( str, "f" ) == 0 )
-		{
-			//面
-			in = 0;
-
-			do
-			{
-				fscanf( file, "%s", str );
-
-				s = strtok( str, "/" );	
-				Model->VertexArray[vc].Position = positionArray[ atoi( s ) - 1 ];
-				if( s[ strlen( s ) + 1 ] != '/' )
-				{
-					//テクスチャ座標が存在しない場合もある
-					s = strtok( NULL, "/" );
-					Model->VertexArray[vc].TexCoord = texcoordArray[ atoi( s ) - 1 ];
-				}
-				s = strtok( NULL, "/" );	
-				Model->VertexArray[vc].Normal = normalArray[ atoi( s ) - 1 ];
-
-				Model->VertexArray[vc].Diffuse = XMFLOAT4( 1.0f, 1.0f, 1.0f, 1.0f );
-
-				Model->IndexArray[ic] = vc;
-				ic++;
-				vc++;
-
-				in++;
-				c = fgetc( file );
-			}
-			while( c != '\n' && c != '\r' );
-
-			//四角は三角に分割
-			if( in == 4 )
-			{
-				Model->IndexArray[ic] = vc - 4;
-				ic++;
-				Model->IndexArray[ic] = vc - 2;
-				ic++;
-			}
-		}
-	}
-
-
-	if( sc != 0 )
-		Model->SubsetArray[ sc - 1 ].IndexNum = ic - Model->SubsetArray[ sc - 1 ].StartIndex;
-
-
-
-	fclose(file);
-
-	delete[] positionArray;
-	delete[] normalArray;
-	delete[] texcoordArray;
-	delete[] materialArray;
-}
-
-
-
-
-//マテリアル読み込み///////////////////////////////////////////////////////////////////
-void CModel::LoadMaterial( const char *FileName, MODEL_MATERIAL **MaterialArray, unsigned short *MaterialNum )
-{
-	char str[256];
-
-	FILE *file;
-	file = fopen( FileName, "rt" );
-	if( file == NULL )
-	{
-		assert(false);
-		return;
-	}
-
-	MODEL_MATERIAL *materialArray;
-	unsigned short materialNum = 0;
-
-	//要素数カウント
-	while( true )
-	{
-		fscanf( file, "%s", str );
-
-		if( feof( file ) != 0 )
-			break;
-
-
-		if( strcmp( str, "newmtl" ) == 0 )
-		{
-			materialNum++;
-		}
-	}
-
-
-	//メモリ確保
-	materialArray = new MODEL_MATERIAL[ materialNum ];
-
-
-	//要素読込
-	int mc = -1;
-
-	fseek( file, 0, SEEK_SET );
-
-	while( true )
-	{
-		fscanf( file, "%s", str );
-
-		if( feof( file ) != 0 )
-			break;
-
-
-		if( strcmp( str, "newmtl" ) == 0 )
-		{
-			//マテリアル名
-			mc++;
-			fscanf( file, "%s", materialArray[ mc ].Name );
-			strcpy( materialArray[ mc ].TextureName, "" );
-		}
-		else if( strcmp( str, "Ka" ) == 0 )
-		{
-			//アンビエント
-			fscanf( file, "%f", &materialArray[ mc ].Material.Ambient.r );
-			fscanf( file, "%f", &materialArray[ mc ].Material.Ambient.g );
-			fscanf( file, "%f", &materialArray[ mc ].Material.Ambient.b );
-			materialArray[ mc ].Material.Ambient.a = 1.0f;
-		}
-		else if( strcmp( str, "Kd" ) == 0 )
-		{
-			//ディフューズ
-			fscanf( file, "%f", &materialArray[ mc ].Material.Diffuse.r );
-			fscanf( file, "%f", &materialArray[ mc ].Material.Diffuse.g );
-			fscanf( file, "%f", &materialArray[ mc ].Material.Diffuse.b );
-			materialArray[ mc ].Material.Diffuse.a = 1.0f;
-		}
-		else if( strcmp( str, "Ks" ) == 0 )
-		{
-			//スペキュラ
-			fscanf( file, "%f", &materialArray[ mc ].Material.Specular.r );
-			fscanf( file, "%f", &materialArray[ mc ].Material.Specular.g );
-			fscanf( file, "%f", &materialArray[ mc ].Material.Specular.b );
-			materialArray[ mc ].Material.Specular.a = 1.0f;
-		}
-		else if( strcmp( str, "Ns" ) == 0 )
-		{
-			//スペキュラ強度
-			fscanf( file, "%f", &materialArray[ mc ].Material.Shininess );
-		}
-		else if( strcmp( str, "d" ) == 0 )
-		{
-			//アルファ
-			fscanf( file, "%f", &materialArray[ mc ].Material.Diffuse.a );
-		}
-		else if( strcmp( str, "map_Kd" ) == 0 )
-		{
-			//テクスチャ
-			fscanf( file, "%s", str );
-
-			char path[256];
-			strcpy( path, "asset/" );
-			strcat( path, str );
-
-			strcat( materialArray[ mc ].TextureName, path );
-		}
-	}
-
-	fclose(file);
-
-	*MaterialArray = materialArray;
-	*MaterialNum = materialNum;
-}
+//#include "Model.h"
+//
+//bool Model::Initialize(const std::string & filePath, ID3D11Device * device, ID3D11DeviceContext * deviceContext, ID3D11ShaderResourceView * texture, ConstantBuffer<CB_VS_vertexshader>& cb_vs_vertexshader)
+//{
+//	this->device = device;
+//	this->deviceContext = deviceContext;
+//	this->texture = texture;
+//	this->cb_vs_vertexshader = &cb_vs_vertexshader;
+//
+//	try
+//	{
+//		if (!this->LoadModel(filePath))
+//			return false;
+//	}
+//	catch (COMException & exception)
+//	{
+//		ErrorLogger::Log(exception);
+//		return false;
+//	}
+//
+//	this->SetPosition(0.0f, 0.0f, 0.0f);
+//	this->SetRotation(0.0f, 0.0f, 0.0f);
+//	this->UpdateWorldMatrix();
+//	return true;
+//}
+//
+//void Model::SetTexture(ID3D11ShaderResourceView * texture)
+//{
+//	this->texture = texture;
+//}
+//
+//void Model::Draw(const XMMATRIX & viewProjectionMatrix)
+//{
+//	//Update Constant buffer with WVP Matrix
+//	this->cb_vs_vertexshader->data.mat = this->worldMatrix * viewProjectionMatrix; //Calculate World-View-Projection Matrix
+//	this->cb_vs_vertexshader->data.mat = XMMatrixTranspose(this->cb_vs_vertexshader->data.mat);
+//	this->cb_vs_vertexshader->ApplyChanges();
+//	this->deviceContext->VSSetConstantBuffers(0, 1, this->cb_vs_vertexshader->GetAddressOf());
+//
+//	this->deviceContext->PSSetShaderResources(0, 1, &this->texture); //Set Texture
+//
+//	for (int i = 0; i < meshes.size(); i++)
+//	{
+//		meshes[i].Draw();
+//	}
+//}
+//
+//bool Model::LoadModel(const std::string & filePath)
+//{
+//	Assimp::Importer importer;
+//
+//	const aiScene* pScene = importer.ReadFile(filePath,
+//												aiProcess_Triangulate |
+//												aiProcess_ConvertToLeftHanded);
+//
+//	if (pScene == nullptr)
+//		return false;
+//
+//	this->ProcessNode(pScene->mRootNode, pScene);
+//	return true;
+//}
+//
+//void Model::ProcessNode(aiNode * node, const aiScene * scene)
+//{
+//	for (UINT i = 0; i < node->mNumMeshes; i++)
+//	{
+//		aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
+//		meshes.push_back(this->ProcessMesh(mesh, scene));
+//	}
+//
+//	for (UINT i = 0; i < node->mNumChildren; i++)
+//	{
+//		this->ProcessNode(node->mChildren[i], scene);
+//	}
+//}
+//
+//Mesh Model::ProcessMesh(aiMesh * mesh, const aiScene * scene)
+//{
+//	// Data to fill
+//	std::vector<Vertex> vertices;
+//	std::vector<DWORD> indices;
+//
+//	//Get vertices
+//	for (UINT i = 0; i < mesh->mNumVertices; i++)
+//	{
+//		Vertex vertex;
+//
+//		vertex.pos.x = mesh->mVertices[i].x;
+//		vertex.pos.y = mesh->mVertices[i].y;
+//		vertex.pos.z = mesh->mVertices[i].z;
+//
+//		if (mesh->mTextureCoords[0])
+//		{
+//			vertex.texCoord.x = (float)mesh->mTextureCoords[0][i].x;
+//			vertex.texCoord.y = (float)mesh->mTextureCoords[0][i].y;
+//		}
+//
+//		vertices.push_back(vertex);
+//	}
+//
+//	//Get indices
+//	for (UINT i = 0; i < mesh->mNumFaces; i++)
+//	{
+//		aiFace face = mesh->mFaces[i];
+//
+//		for (UINT j = 0; j < face.mNumIndices; j++)
+//			indices.push_back(face.mIndices[j]);
+//	}
+//
+//	return Mesh(this->device, this->deviceContext, vertices, indices);
+//}
+//
+//void Model::UpdateWorldMatrix()
+//{
+//	this->worldMatrix = XMMatrixRotationRollPitchYaw(this->rot.x, this->rot.y, this->rot.z) * XMMatrixTranslation(this->pos.x, this->pos.y, this->pos.z);
+//	XMMATRIX vecRotationMatrix = XMMatrixRotationRollPitchYaw(0.0f, this->rot.y, 0.0f);
+//	this->vec_forward = XMVector3TransformCoord(this->DEFAULT_FORWARD_VECTOR, vecRotationMatrix);
+//	this->vec_backward = XMVector3TransformCoord(this->DEFAULT_BACKWARD_VECTOR, vecRotationMatrix);
+//	this->vec_left = XMVector3TransformCoord(this->DEFAULT_LEFT_VECTOR, vecRotationMatrix);
+//	this->vec_right = XMVector3TransformCoord(this->DEFAULT_RIGHT_VECTOR, vecRotationMatrix);
+//}
+//
+//const XMVECTOR & Model::GetPositionVector() const
+//{
+//	return this->posVector;
+//}
+//
+//const XMFLOAT3 & Model::GetPositionFloat3() const
+//{
+//	return this->pos;
+//}
+//
+//const XMVECTOR & Model::GetRotationVector() const
+//{
+//	return this->rotVector;
+//}
+//
+//const XMFLOAT3 & Model::GetRotationFloat3() const
+//{
+//	return this->rot;
+//}
+//
+//void Model::SetPosition(const XMVECTOR & pos)
+//{
+//	XMStoreFloat3(&this->pos, pos);
+//	this->posVector = pos;
+//	this->UpdateWorldMatrix();
+//}
+//
+//void Model::SetPosition(const XMFLOAT3 & pos)
+//{
+//	this->pos = pos;
+//	this->posVector = XMLoadFloat3(&this->pos);
+//	this->UpdateWorldMatrix();
+//}
+//
+//void Model::SetPosition(float x, float y, float z)
+//{
+//	this->pos = XMFLOAT3(x, y, z);
+//	this->posVector = XMLoadFloat3(&this->pos);
+//	this->UpdateWorldMatrix();
+//}
+//
+//void Model::AdjustPosition(const XMVECTOR & pos)
+//{
+//	this->posVector += pos;
+//	XMStoreFloat3(&this->pos, this->posVector);
+//	this->UpdateWorldMatrix();
+//}
+//
+//void Model::AdjustPosition(const XMFLOAT3 & pos)
+//{
+//	this->pos.x += pos.y;
+//	this->pos.y += pos.y;
+//	this->pos.z += pos.z;
+//	this->posVector = XMLoadFloat3(&this->pos);
+//	this->UpdateWorldMatrix();
+//}
+//
+//void Model::AdjustPosition(float x, float y, float z)
+//{
+//	this->pos.x += x;
+//	this->pos.y += y;
+//	this->pos.z += z;
+//	this->posVector = XMLoadFloat3(&this->pos);
+//	this->UpdateWorldMatrix();
+//}
+//
+//void Model::SetRotation(const XMVECTOR & rot)
+//{
+//	this->rotVector = rot;
+//	XMStoreFloat3(&this->rot, rot);
+//	this->UpdateWorldMatrix();
+//}
+//
+//void Model::SetRotation(const XMFLOAT3 & rot)
+//{
+//	this->rot = rot;
+//	this->rotVector = XMLoadFloat3(&this->rot);
+//	this->UpdateWorldMatrix();
+//}
+//
+//void Model::SetRotation(float x, float y, float z)
+//{
+//	this->rot = XMFLOAT3(x, y, z);
+//	this->rotVector = XMLoadFloat3(&this->rot);
+//	this->UpdateWorldMatrix();
+//}
+//
+//void Model::AdjustRotation(const XMVECTOR & rot)
+//{
+//	this->rotVector += rot;
+//	XMStoreFloat3(&this->rot, this->rotVector);
+//	this->UpdateWorldMatrix();
+//}
+//
+//void Model::AdjustRotation(const XMFLOAT3 & rot)
+//{
+//	this->rot.x += rot.x;
+//	this->rot.y += rot.y;
+//	this->rot.z += rot.z;
+//	this->rotVector = XMLoadFloat3(&this->rot);
+//	this->UpdateWorldMatrix();
+//}
+//
+//void Model::AdjustRotation(float x, float y, float z)
+//{
+//	this->rot.x += x;
+//	this->rot.y += y;
+//	this->rot.z += z;
+//	this->rotVector = XMLoadFloat3(&this->rot);
+//	this->UpdateWorldMatrix();
+//}
+//
+//void Model::SetLookAtPos(XMFLOAT3 lookAtPos)
+//{
+//	//Verify that look at pos is not the same as cam pos. They cannot be the same as that wouldn't make sense and would result in undefined behavior.
+//	if (lookAtPos.x == this->pos.x && lookAtPos.y == this->pos.y && lookAtPos.z == this->pos.z)
+//		return;
+//
+//	lookAtPos.x = this->pos.x - lookAtPos.x;
+//	lookAtPos.y = this->pos.y - lookAtPos.y;
+//	lookAtPos.z = this->pos.z - lookAtPos.z;
+//
+//	float pitch = 0.0f;
+//	if (lookAtPos.y != 0.0f)
+//	{
+//		const float distance = sqrt(lookAtPos.x * lookAtPos.x + lookAtPos.z * lookAtPos.z);
+//		pitch = atan(lookAtPos.y / distance);
+//	}
+//
+//	float yaw = 0.0f;
+//	if (lookAtPos.x != 0.0f)
+//	{
+//		yaw = atan(lookAtPos.x / lookAtPos.z);
+//	}
+//	if (lookAtPos.z > 0)
+//		yaw += XM_PI;
+//
+//	this->SetRotation(pitch, yaw, 0.0f);
+//}
+//
+//const XMVECTOR & Model::GetForwardVector()
+//{
+//	return this->vec_forward;
+//}
+//
+//const XMVECTOR & Model::GetRightVector()
+//{
+//	return this->vec_right;
+//}
+//
+//const XMVECTOR & Model::GetBackwardVector()
+//{
+//	return this->vec_backward;
+//}
+//
+//const XMVECTOR & Model::GetLeftVector()
+//{
+//	return this->vec_left;
+//}
