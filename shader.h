@@ -31,7 +31,11 @@ public:
 	void SetViewMatrix(XMFLOAT4X4* ViewMatrix) { m_Constant.ViewMatrix = Transpose(ViewMatrix); };
 	void SetProjectionMatrix(XMFLOAT4X4* ProjectionMatrix) { m_Constant.ProjectionMatrix = Transpose( ProjectionMatrix ); }
 	void SetCameraPosition(XMFLOAT4* CameraPosition) { m_Constant.CameraPosition = *CameraPosition; }
-
+	void SetLight(LIGHT* light) {
+		m_Light = *light; 
+		m_Light.ViewMatrix = XMMatrixTranspose(light->ViewMatrix);
+		m_Light.ProjectionMatrix = XMMatrixTranspose(light->ProjectionMatrix);
+	};
 	XMFLOAT4X4 Transpose(XMFLOAT4X4* Matrix)
 	{
 		XMFLOAT4X4 outMatrix;

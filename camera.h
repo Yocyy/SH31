@@ -5,8 +5,6 @@
 class CShader;
 class CCamera : public CGameObject
 {
-	// XMFLOAT3					m_Position;
-	XMFLOAT3					m_Rotation;
 	XMMATRIX	m_ViewMatrix;
 	XMMATRIX	m_InvViewMatrix;
 	XMMATRIX	m_ProjectionMatrix;
@@ -15,7 +13,6 @@ class CCamera : public CGameObject
 	RECT m_Viewport;
 	XMFLOAT3	m_Front, m_Right, m_Up;
 	float Move_Speed;
-	CShader* m_Shader;
 public:
 	void Init();
 	void Uninit();
@@ -24,5 +21,6 @@ public:
 
 	bool CheckInput();
 	XMMATRIX& GetViewMatrix();
+	XMMATRIX& GetProjectionMatrix();
 	XMFLOAT4  GetCameraPosition4f();
 };

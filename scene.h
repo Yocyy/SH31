@@ -12,6 +12,8 @@
 #include "fieldNormal.h"
 #include "toonfield.h"
 #include "shadowpolygon.h"
+#include "3DObject.h"
+#include "Light.h"
 
 class CScene
 {
@@ -26,10 +28,12 @@ public:
 	virtual void Init()
 	{
 		AddGameObject<CCamera>();
-		//AddGameObject<CField>();
+		AddGameObject<CLight>();
 		AddGameObject<CFieldNormal>();
-		AddGameObject<CPolygon>();
+		AddGameObject<C3DObject>();
 		AddGameObject<CShadowPolygon>();
+		//AddGameObject<CPolygon>();
+		AddGameObject<CField>();
 		//AddGameObject<CPlayer>();
 		//AddGameObject<CFieldToon>();
 	}
@@ -82,5 +86,10 @@ public:
 			}
 		}
 		return nullptr;
+	}
+
+	virtual void DrawShadow() {
+		for (CGameObject* object : m_GameObject)
+			object->DrawShadow();
 	}
 };

@@ -7,8 +7,7 @@
 #include "manager.h"
 #include "Camera.h"
 #include "shaderNormal.h"
-
-
+#include "Light.h"
 void CFieldNormal::Init()
 {
 	VERTEX_3D_NORMAL vertex[4];
@@ -41,7 +40,9 @@ void CFieldNormal::Init()
 	vertex[3].Diffuse = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
 	vertex[3].TexCoord = XMFLOAT2(1.0f, 1.0f);
 
-	m_Position = XMFLOAT3(10, -5, 0);	//初期値
+	m_Position = XMFLOAT3(5, 0, 0);	//初期値
+	m_Rotation = XMFLOAT3(-1.0f, 0.0f, 0.0f);
+	m_Scale = XMFLOAT3(1.0f, 1.0f, 1.0f);
 
 	D3D11_BUFFER_DESC bd;
 	ZeroMemory(&bd, sizeof(bd));
@@ -103,26 +104,18 @@ void CFieldNormal::Update()
 
 	if (CInput::GetKeyPress('I'))
 	{
-		m_Position.y += Rot_Speed;
+		m_Position.z += Rot_Speed;
 	}
 	if (CInput::GetKeyPress('K'))
 	{
-		m_Position.y -= Rot_Speed;
-	}
-
-	if (CInput::GetKeyPress(VK_UP))
-	{
-		m_Position.z += Rot_Speed;
-	}
-	if (CInput::GetKeyPress(VK_DOWN))
-	{
 		m_Position.z -= Rot_Speed;
 	}
-	if (CInput::GetKeyPress(VK_RIGHT))
+
+	if (CInput::GetKeyPress('L'))
 	{
 		m_Position.x += Rot_Speed;
 	}
-	if (CInput::GetKeyPress(VK_LEFT))
+	if (CInput::GetKeyPress('J'))
 	{
 		m_Position.x -= Rot_Speed;
 	}
@@ -130,7 +123,7 @@ void CFieldNormal::Update()
 
 void CFieldNormal::Draw()
 {
-
+	//CRenderer::SetShadowTexture(0);
 	// 頂点バッファ設定
 	UINT stride = sizeof(VERTEX_3D_NORMAL);
 	UINT offset = 0;
@@ -138,23 +131,25 @@ void CFieldNormal::Draw()
 	CRenderer::SetTexture(m_Texture[0], m_Texture[1],m_Texture[2]);
 
 	XMMATRIX world;
-	world = XMMatrixScaling(1.0f, 1.0f, 1.0f);
+	world = XMMatrixScaling(m_Scale.x, m_Scale.y, m_Scale.z);
 	world *= XMMatrixRotationRollPitchYaw(m_Rotation.x, m_Rotation.y, m_Rotation.z);
 	world *= XMMatrixTranslation(m_Position.x, m_Position.y, m_Position.z);
 
-	XMFLOAT4X4 projection;
+	//XMFLOAT4X4 projection;
 	XMFLOAT4X4 matrix;
-	DirectX::XMStoreFloat4x4(&projection, XMMatrixPerspectiveFovLH(XM_PI / 2, (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT, 0.1f, 1000.0f));
+	//DirectX::XMStoreFloat4x4(&projection, XMMatrixPerspectiveFovLH(XM_PI / 2, (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT, 0.1f, 1000.0f));
 	XMStoreFloat4x4(&matrix, world);
 	m_Shader->SetWorldMatrix(&matrix);
+
 	CCamera* camera = CManager::GetScene()->GetGameObject<CCamera>();
 	XMStoreFloat4x4(&matrix, camera->GetViewMatrix());
 	m_Shader->SetViewMatrix(&matrix);
-	m_Shader->SetProjectionMatrix(&projection);
+
+	XMStoreFloat4x4(&matrix, camera->GetProjectionMatrix());
+	m_Shader->SetProjectionMatrix(&matrix);
 	m_Shader->SetCameraPosition(&camera->GetCameraPosition4f());
 
 	m_Shader->Set();
-
 
 	// プリミティブトポロジ設定
 	CRenderer::GetDeviceContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
@@ -163,27 +158,37 @@ void CFieldNormal::Draw()
 	CRenderer::GetDeviceContext()->Draw(4, 0);
 }
 
-bool CFieldNormal::CheckInput()
+void CFieldNormal::DrawShadow()
 {
-	//if (CInput::GetKeyPress('W'))
-	//{
-	//	m_Rotation.y += Rot_Speed;
-	//	return true;
-	//}
-	//if (CInput::GetKeyPress('S'))
-	//{
-	//	m_Rotation.y -= Rot_Speed;
-	//	return true;
-	//}
-	//if (CInput::GetKeyPress('D'))
-	//{
-	//	m_Rotation.x += Rot_Speed;
-	//	return true;
-	//}
-	//if (CInput::GetKeyPress('A'))
-	//{
-	//	m_Rotation.x -= Rot_Speed;
-	//	return true;
-	//}
-	return false;
+	CRenderer::SetShadowTexture(0);
+
+	// 頂点バッファ設定
+	UINT stride = sizeof(VERTEX_3D_NORMAL);
+	UINT offset = 0;
+	CRenderer::GetDeviceContext()->IASetVertexBuffers(0, 1, &m_VertexBuffer, &stride, &offset);
+
+	// マトリクス設定
+	XMMATRIX world;
+	world = XMMatrixScaling(m_Scale.x, m_Scale.y, m_Scale.z);
+	world *= XMMatrixRotationRollPitchYaw(m_Rotation.x, m_Rotation.y, m_Rotation.z);
+	world *= XMMatrixTranslation(m_Position.x, m_Position.y, m_Position.z);
+
+	XMFLOAT4X4 world4x4;
+	XMStoreFloat4x4(&world4x4, world);
+	m_Shader->SetWorldMatrix(&world4x4);
+
+	CLight* light = CManager::GetScene()->GetGameObject<
+		CLight>();
+	XMFLOAT4X4 TempMatrix;
+	XMStoreFloat4x4(&TempMatrix, light->GetViewMatrix());
+	m_Shader->SetViewMatrix(&TempMatrix);
+
+	XMStoreFloat4x4(&TempMatrix, light->GetProjectionMatrix());
+	m_Shader->SetProjectionMatrix(&TempMatrix);
+
+	m_Shader->Set();
+	// プリミティブトポロジ設定
+	CRenderer::GetDeviceContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
+	// ポリゴン描画
+	CRenderer::GetDeviceContext()->Draw(4, 0);
 }

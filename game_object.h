@@ -69,4 +69,7 @@ public:
 			return false;
 		}
 	}
+
+	virtual void DrawShadow() {};
+	//virtual void Draw() = 0;
 };

@@ -18,6 +18,8 @@ struct LIGHT
     float4 Direction;
     float4 Diffuse;
     float4 Ambient;
+    matrix ViewMatrix;
+    matrix ProjectionMatrix;
 };
 
 cbuffer LightBuffer : register(b1) //Shader.cpp‚©‚ç“]‘—‚³‚ê‚é

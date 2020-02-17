@@ -12,8 +12,8 @@ private:
 	float size_x, size_y;
 public:
 	CShadowPolygon()
-		:size_x(240)
-		, size_y(135) {}
+		:size_x(SCREEN_WIDTH/4)
+		, size_y(SCREEN_HEIGHT/4) {}
 	void Init();
 	void Uninit();
 	void Update();

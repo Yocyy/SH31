@@ -105,7 +105,7 @@ void CShaderNormal::Init(const char* VertexShader, const char* PixelShader)
 void CShaderNormal::Uninit()
 {
 	if (m_ConstantBuffer)	m_ConstantBuffer->Release();
-
+	if (m_LightBuffer)		m_LightBuffer->Release();
 	if (m_VertexLayout)		m_VertexLayout->Release();
 	if (m_VertexShader)		m_VertexShader->Release();
 	if (m_PixelShader)		m_PixelShader->Release();

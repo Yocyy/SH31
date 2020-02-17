@@ -98,6 +98,12 @@
     <ClCompile Include="shadowpolygon.cpp">
       <Filter>ソース ファイル\game_object</Filter>
     </ClCompile>
+    <ClCompile Include="OBJmodel.cpp">
+      <Filter>ソース ファイル\Model</Filter>
+    </ClCompile>
+    <ClCompile Include="3DObject.cpp">
+      <Filter>ソース ファイル\game_object</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main.h">
@@ -163,6 +169,12 @@
     <ClInclude Include="shadowpolygon.h">
       <Filter>ソース ファイル\game_object</Filter>
     </ClInclude>
+    <ClInclude Include="OBJmodel.h">
+      <Filter>ソース ファイル\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="3DObject.h">
+      <Filter>ソース ファイル\game_object</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="ClassDiagram.cd" />
@@ -190,6 +202,12 @@
       <Filter>ソース ファイル\hlsl</Filter>
     </FxCompile>
     <FxCompile Include="shader2DShadowPS.hlsl">
+      <Filter>ソース ファイル\hlsl</Filter>
+    </FxCompile>
+    <FxCompile Include="shader3DShadowVS.hlsl">
+      <Filter>ソース ファイル\hlsl</Filter>
+    </FxCompile>
+    <FxCompile Include="shader3DShadowPS.hlsl">
       <Filter>ソース ファイル\hlsl</Filter>
     </FxCompile>
   </ItemGroup>

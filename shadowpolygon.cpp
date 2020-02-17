@@ -74,8 +74,6 @@ void CShadowPolygon::Draw()
 	UINT offset = 0;
 	CRenderer::GetDeviceContext()->IASetVertexBuffers(0, 1, &m_VertexBuffer, &stride, &offset);
 
-	//CRenderer::SetTexture(m_Texture[0], m_Texture[1]);
-
 	XMFLOAT4X4 identity;
 	DirectX::XMStoreFloat4x4(&identity, XMMatrixIdentity());
 

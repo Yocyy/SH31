@@ -4,16 +4,15 @@
 
 class CScene;
 class CShader;
+class COBJModel;
 
-class CField : public CGameObject
+class C3DObject : public CGameObject
 {
 private:
-
-	ID3D11Buffer*	m_VertexBuffer = NULL;
-	CShader*		m_Shader;
-	float Rot_Speed = 0.2f;
-	CTexture*		m_Texture;
-	bool inputValue;
+	CShader* m_Shader;
+	COBJModel* m_Model;
+	float Move_Speed = 0.1f;
+	float Rot_Speed = 0.1f;
 public:
 	void Init();
 	void Uninit();

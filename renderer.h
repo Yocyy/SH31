@@ -78,6 +78,8 @@ struct LIGHT
 	XMFLOAT4	Direction;
 	COLOR		Diffuse;
 	COLOR		Ambient;
+	XMMATRIX	ViewMatrix;
+	XMMATRIX	ProjectionMatrix;
 };
 
 
@@ -128,6 +130,7 @@ public:
 	static void SetTexture(CTexture* NormalTexture, CTexture* Texture, CTexture* HeightTexture);
 	static void SetShadowTexture(unsigned int Slot);
 	static void DrawIndexed( unsigned int IndexCount, unsigned int StartIndexLocation, int BaseVertexLocation );
+
 
 	static ID3D11Device* GetDevice( void ){ return m_D3DDevice; }
 	static ID3D11DeviceContext* GetDeviceContext( void ){ return m_ImmediateContext; }

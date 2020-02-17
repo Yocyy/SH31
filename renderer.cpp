@@ -139,7 +139,7 @@ void CRenderer::Init()
 	D3D11_RASTERIZER_DESC rd;
 	ZeroMemory(&rd, sizeof(rd));
 	rd.FillMode = D3D11_FILL_SOLID; //Debug D3D11_FILL_WIREFRAME
-	rd.CullMode = D3D11_CULL_NONE;
+	rd.CullMode = D3D11_CULL_BACK;
 	rd.DepthClipEnable = TRUE;
 	rd.MultisampleEnable = FALSE;
 
@@ -194,20 +194,36 @@ void CRenderer::Init()
 	// サンプラーステート設定
 	D3D11_SAMPLER_DESC samplerDesc;
 	ZeroMemory(&samplerDesc, sizeof(samplerDesc));
-	samplerDesc.Filter = D3D11_FILTER_ANISOTROPIC;
-	samplerDesc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
-	samplerDesc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
-	samplerDesc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
-	samplerDesc.MipLODBias = 0;
-	samplerDesc.MaxAnisotropy = 16;
-	samplerDesc.ComparisonFunc = D3D11_COMPARISON_ALWAYS;
-	samplerDesc.MinLOD = 0;
-	samplerDesc.MaxLOD = D3D11_FLOAT32_MAX;
+	samplerDesc.AddressU = D3D11_TEXTURE_ADDRESS_BORDER;
+	samplerDesc.AddressV = D3D11_TEXTURE_ADDRESS_BORDER;
+	samplerDesc.AddressW = D3D11_TEXTURE_ADDRESS_BORDER;
+	//samplerDesc.BorderColor[0] = 1.0f;
+	//samplerDesc.BorderColor[1] = 1.0f;
+	//samplerDesc.BorderColor[2] = 1.0f;
 
 	ID3D11SamplerState* samplerState = NULL;
 	m_D3DDevice->CreateSamplerState(&samplerDesc, &samplerState);
 
 	m_ImmediateContext->PSSetSamplers(0, 1, &samplerState);
+
+
+	//// サンプラーステート設定
+	//D3D11_SAMPLER_DESC samplerDesc;
+	//ZeroMemory(&samplerDesc, sizeof(samplerDesc));
+	//samplerDesc.Filter = D3D11_FILTER_ANISOTROPIC;
+	//samplerDesc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
+	//samplerDesc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
+	//samplerDesc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
+	//samplerDesc.MipLODBias = 0;
+	//samplerDesc.MaxAnisotropy = 16;
+	//samplerDesc.ComparisonFunc = D3D11_COMPARISON_ALWAYS;
+	//samplerDesc.MinLOD = 0;
+	//samplerDesc.MaxLOD = D3D11_FLOAT32_MAX;
+
+	//ID3D11SamplerState* samplerState = NULL;
+	//m_D3DDevice->CreateSamplerState(&samplerDesc, &samplerState);
+
+	//m_ImmediateContext->PSSetSamplers(0, 1, &samplerState);
 }
 
 
@@ -237,7 +253,7 @@ void CRenderer::Begin()
 
 void CRenderer::BeginShadow()
 {
-		// バックバッファクリア
+	// バックバッファクリア
 	m_ImmediateContext->OMSetRenderTargets(0, NULL, m_ShadowDepthStencilView);
 	m_ImmediateContext->ClearDepthStencilView(m_ShadowDepthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
 }
